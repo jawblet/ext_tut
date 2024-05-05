@@ -1,5 +1,17 @@
 <html>
   <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+    <script>
+      config = "file:///Users/juliabell/Library/Application%20Support/Google/Chrome/Default/Conversions"
+      initSqlJs(config).then(function(SQL){
+        //Create the database
+        const db = new SQL.Database();
+        // Run a query without reading the results
+        db.run("CREATE TABLE test (col1, col2);");
+        // Insert two rows: (1,111) and (2,222)
+        db.run("INSERT INTO test VALUES (?,?), (?,?)", [1,111,2,222]);
+      });
+      </script>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>

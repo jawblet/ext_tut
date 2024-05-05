@@ -2,7 +2,7 @@
   "name": "Aura",
   "description": "Base Level Extension",
   "version": "1.0",
-  "manifest_version": 3,
+  "manifest_version": 2,
   "action": {
     "default_popup": "hello.html",
     "default_icon": "hello_extensions.png"
@@ -11,7 +11,13 @@
     "service_worker": "background.js",
     "type": "module"
   },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
   "permissions": [
     "storage"
-  ]
+  ],
+  "host_permissions": [
+    "<all_urls>"
+ ]
 }
