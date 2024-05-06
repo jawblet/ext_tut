@@ -1,6 +1,8 @@
 /**
  * Store installation date in local storage 
  */
+console.log("BACKGROUND")
+
 chrome.runtime.onInstalled.addListener(() => {
         chrome.storage.local.get(["installed"]).then((result) => {
                 if(result.value == undefined) {
