@@ -1,6 +1,5 @@
 
-// const file = "file:///Users/juliabell/Library/Application%20Support/Google/Chrome/Default/Conversions"
-const file = "file:///home/jt/.config/google-chrome/Default/Conversions"
+const file = "file:///Users/juliabell/Library/Application%20Support/Google/Chrome/Default/Conversions"
 
 function GetTimeUpdatedFromLocalStorage() {
     return new Promise(function(resolve, reject) {
