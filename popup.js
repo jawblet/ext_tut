@@ -1,5 +1,6 @@
 
-const file = "file:///Users/juliabell/Library/Application%20Support/Google/Chrome/Default/Conversions"
+// const file = "file:///Users/juliabell/Library/Application%20Support/Google/Chrome/Default/Conversions"
+const file = "file:///home/jt/.config/google-chrome/Default/Conversions"
 
 function GetTimeUpdatedFromLocalStorage() {
     return new Promise(function(resolve, reject) {
@@ -115,6 +116,46 @@ async function getDate() {
 
 console.log("GET DATE")
 getDate();
+
+/**
+ * data visualization
+ */
+async function getData() {
+    const db_promise = fetch(file)
+    .then((res) => res.arrayBuffer())
+    .then(arrayBuffer => {
+        return initSqlJs().then(SQL => {
+            // CREATE DB AND CHECK THAT IT INIT CORRECTLY
+            const db = new SQL.Database(new Uint8Array(arrayBuffer));
+            const check = db.exec("SELECT name FROM sqlite_master WHERE type='table';");
+            if(check.length > 0) {
+                tables = check[0].values
+                console.log(tables)
+            } else {
+                throw new Error("No tables in the database:");
+            }
+            return db;
+        });
+      })
+    .then(async db => {
+        // CHECK SOURCE TABLE
+        var stmt = db.prepare(
+            "SELECT s.source_origin, COUNT() AS count FROM sources s GROUP BY s.source_origin ORDER BY count DESC;"
+        );
+        const data = []
+        while (stmt.step()) data.push(stmt.getAsObject());
+        const plot = Plot.barX(data, { x: "count", y: "source_origin" }).plot({
+            marginLeft: 200
+        })
+        const div = document.querySelector("#source-plot");
+        div.append(plot);
+
+        return db
+    })
+    .catch((e) => console.error(e));
+}
+
+getData()
 
 // USE FOR DEBUGGING
 function clearLocalStorage() {

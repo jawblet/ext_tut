@@ -3,6 +3,12 @@
         src: url(./Graphik/Graphik.otf);
 }
 
+html
+{
+    width: 800px;  /* max: 800px */
+    height: 600px; /* max: 600px */
+}
+
 body {
         font-family: "Graphik";
         display: block;
