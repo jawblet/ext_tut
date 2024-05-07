@@ -141,11 +141,34 @@ async function getData() {
         var stmt = db.prepare(
             "SELECT s.source_origin, COUNT() AS count FROM sources s GROUP BY s.source_origin ORDER BY count DESC;"
         );
-        const data = []
+        var data = []
         while (stmt.step()) data.push(stmt.getAsObject());
-        const plot = Plot.barX(data, { x: "count", y: "source_origin" }).plot({
-            marginLeft: 200
+        const modifiedData = data.map(item => {
+            let source_origin = item.source_origin;
+          
+            // Remove "https://" if present
+            if (source_origin.startsWith('https://')) {
+              source_origin = source_origin.slice(8);
+            }
+          
+            // Remove "www." if present
+            if (source_origin.startsWith('www.')) {
+              source_origin = source_origin.slice(4);
+            }
+          
+            return { ...item, source_origin };
+          });
+        data = modifiedData  
+        console.log(modifiedData)
+        const plot = Plot.plot({
+            marginLeft: 200,
+            x: { label: "count", labelAnchor: "center"},
+            y: {label: "source_origin"},
+            marks : [
+                Plot.barX(data, { x: "count", y: "source_origin", fill: "#4b82c9" })
+            ]
         })
+
         const div = document.querySelector("#source-plot");
         div.append(plot);
 

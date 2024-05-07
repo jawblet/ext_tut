@@ -42,3 +42,7 @@ p, h3 {
 .scalar_number {
         padding: 0.5rem;
 }
+
+#source-plot {
+        margin-bottom: 2rem;
+}
