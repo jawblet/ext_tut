@@ -27,6 +27,11 @@ p, h3 {
         margin: 0;
 }
 
+.scalar_container {
+        display: flex;
+        justify-content: space-evenly;
+}
+
 .scalar {
         display: flex;
         flex-direction: column;

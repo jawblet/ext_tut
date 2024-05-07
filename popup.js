@@ -54,11 +54,21 @@ async function getLatestEvents(db) {
         console.log("No new events to record")
     }
 
+    // Send total to extension
     new_total = await GetEventsRecordedFromLocalStorage()
     const full_string = "Total impressions monitored"
     const impressions = new_total.toString()
-    document.querySelector(".scalar_caption").innerText = full_string;
-    document.querySelector(".scalar_number").innerText = impressions;
+    document.getElementById("total_caption").innerText = full_string;
+    document.getElementById("total_num").innerText = impressions;
+
+    // Send last day to extension
+    const currentTimeUnix = Date.now()
+    const oneDayBeforeUnix = currentTimeUnix - 24 * 60 * 60 * 1000
+    day_total = db.exec(`SELECT COUNT(*) FROM sources WHERE source_time > ${oneDayBeforeUnix};`)[0].values[0][0]
+    const day_string = "Impressions in the last day"
+    const day_impressions = day_total.toString()
+    document.getElementById("day_caption").innerText = day_string;
+    document.getElementById("day_num").innerText = day_impressions;
 }
 
 async function fetchDataAndInitSql() {
