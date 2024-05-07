@@ -1,4 +1,3 @@
-
 const file = "file:///Users/juliabell/Library/Application%20Support/Google/Chrome/Default/Conversions"
 
 function GetTimeUpdatedFromLocalStorage() {
