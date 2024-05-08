@@ -1,5 +1,4 @@
 <html>
-
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../assets/styles.css">
@@ -9,6 +8,7 @@
 
 <body>
     <h1>Aura</h1>
+    <h4>Visualize ad impressions collected by Google's Ad Attribution Reporting</h4>
     <div class="scalar_container">
         <div class="scalar">
             <p class="scalar_caption" id="total_caption"></p>
@@ -20,7 +20,12 @@
         </div>
     </div>
     <canvas id="source-chart"></canvas>
-    <canvas id="date-chart"></canvas>
+    <canvas id="date-chart" style="padding-top:2rem"></canvas>
+    <div style="padding-top:2rem">
+        <p>To see your full report, go to chrome://attribution-internals</p>
+        <p style="padding-top:1rem">To turn off ad attribution reporting, go to chrome://flags/#privacy-sandbox-ads-apis and select Disabled</p>
+    </div>
+    <hr/>
     <div class="footer"></div>
     <script src="popup.js"></script>
 </body>

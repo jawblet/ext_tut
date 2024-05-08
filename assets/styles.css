@@ -51,3 +51,15 @@ p, h3 {
 #source-plot {
         margin-bottom: 2rem;
 }
+
+.footer {
+        padding-top: 1rem;
+}
+
+hr {
+        color: rgba(128, 128, 128, 0.542);
+        border-bottom-style: none;
+        border-right-style: none;
+        border-left-style: none;
+        padding-top: 1rem;
+}
