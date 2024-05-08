@@ -165,7 +165,7 @@ async function getData() {
             return { ...item, source_origin };
           });
         data = modifiedData  
-        const ctx = document.getElementById('source-chart');
+        const ctx = document.getElementById('source-origin-chart');
 
         new Chart(ctx, {
             type: 'bar',
@@ -181,7 +181,58 @@ async function getData() {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Attributions by Frequency'
+                        text: 'Source Origin Attributions by Frequency'
+                    }
+                },
+                indexAxis: 'y',
+                scales: {
+                    y: {
+                        ticks: {
+                            autoSkip: false
+                        }
+                    }
+                }
+            },
+        })
+
+        var stmt = db.prepare(
+            "SELECT s.reporting_origin, COUNT() AS count FROM sources s GROUP BY s.reporting_origin ORDER BY count DESC;"
+        );
+        var reportingOriginData = []
+        while (stmt.step()) reportingOriginData.push(stmt.getAsObject());
+        const modifiedReportingOriginData = reportingOriginData.map(item => {
+            let reporting_origin = item.reporting_origin;
+          
+            // Remove "https://" if present
+            if (reporting_origin.startsWith('https://')) {
+              reporting_origin = reporting_origin.slice(8);
+            }
+          
+            // Remove "www." if present
+            if (reporting_origin.startsWith('www.')) {
+              reporting_origin = reporting_origin.slice(4);
+            }
+          
+            return { ...item, reporting_origin };
+          });
+        reportingOriginData = modifiedReportingOriginData  
+        const reportingOriginCtx = document.getElementById('reporting-origin-chart');
+
+        new Chart(reportingOriginCtx, {
+            type: 'bar',
+            data: {
+                labels: reportingOriginData.map(d => d.reporting_origin),
+                datasets: [{
+                    label: '# of Attributions',
+                    data: reportingOriginData.map(d => d.count),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Reporting Origin Attributions by Frequency'
                     }
                 },
                 indexAxis: 'y',
