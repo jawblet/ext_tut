@@ -294,10 +294,17 @@ async function fetchBrowsingTopics() {
     const db_promise = fetch(topics)
     .then((res) => res.json())
     .then(text => {
+        console.log(text)
         if(text.epochs.length) {
             latest_epoch = text.epochs[0]
             latest_topics = latest_epoch.top_topics_and_observing_domains
+            latest_time = latest_epoch.calculation_time
             
+            var converted_time = (BigInt(latest_time) - BigInt(11644473600000000n)) / BigInt(1000)
+            date = new Date(parseInt(converted_time))
+            const topics_title = `Personalized ad interest topics computed by Google's Topics at ${date.toLocaleString()}` 
+            const title = document.getElementById("topics_caption")
+            title.innerText = topics_title
             const list = document.getElementById("topics_data")
 
             latest_topics.forEach(item => {
@@ -309,7 +316,6 @@ async function fetchBrowsingTopics() {
         })
         }
         
-
         return text
     })
     .catch((e) => console.error(e));

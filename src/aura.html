@@ -24,16 +24,16 @@
     <canvas id="reporting-origin-chart"></canvas>
     <canvas id="date-chart" style="padding-top:2rem"></canvas>
     <div class="topics">
-        <h3 class="topics_caption"></h3>
+        <h3 id="topics_caption"></h3>
         <ul id="topics_data">
 
         </ul>
     </div>
-    <div style="padding-top:3rem">
-        <p>To see your full report, go to chrome://attribution-internals</p>
-        <p style="padding-top:1rem;padding-bottom: 1rem;">To turn off ad attribution reporting, go to chrome://flags/#privacy-sandbox-ads-apis and select Disabled</p>
-    </div>
     <hr/>
+    <div>
+        <p>To see your full attribution report, go to <b>chrome://attribution-internals</b>. For topics, go to <b>chrome://topics-internals</b>.</p>
+        <p style="padding-top:1rem;padding-bottom: 1rem;">To turn off ARA and Topics, disable the flag at <b>chrome://flags/#privacy-sandbox-ads-apis</b></p>
+    </div>
     <div class="footer"></div>
     <script src="popup.js"></script>
 </body>

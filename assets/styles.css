@@ -5,8 +5,9 @@
 
 html
 {
-    width: 800px;  /* max: 800px */
-    height: 600px; /* max: 600px */
+    width: 800px;  
+    height: 100vh;
+    /* height: 600px; max: 600px */
 }
 
 body {
@@ -59,4 +60,20 @@ hr {
         border-right-style: none;
         border-left-style: none;
         padding-top: 1rem;
+}
+
+.topics {
+        padding-top: 3rem;
+        padding-bottom: 2rem;
+}
+
+.footer {
+        padding-top: 1rem;
+        display: flex;
+        justify-content: center;
+        color: gray;
+}
+
+canvas {
+        padding-top: 2rem;
 }
