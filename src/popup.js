@@ -169,17 +169,71 @@ async function getData() {
           });
         data = modifiedData  
         console.log(modifiedData)
-        const plot = Plot.plot({
-            marginLeft: 200,
-            x: { label: "count", labelAnchor: "center"},
-            y: {label: "source_origin"},
-            marks : [
-                Plot.barX(data, { x: "count", y: "source_origin", fill: "#4b82c9" })
-            ]
+        const ctx = document.getElementById('source-chart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.map(d => d.source_origin),
+                datasets: [{
+                    label: '# of Attributions',
+                    data: data.map(d => d.count),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Attributions by Frequency'
+                    }
+                },
+                indexAxis: 'y',
+                scales: {
+                    y: {
+                        ticks: {
+                            autoSkip: false
+                        }
+                    }
+                }
+            },
         })
 
-        const div = document.querySelector("#source-plot");
-        div.append(plot);
+        var dateStmt = db.prepare(
+            "SELECT DATE(DATETIME(( source_time - 11644473600000000 ) / 1000000, 'unixepoch')) AS date, COUNT() AS count FROM sources GROUP BY date;"
+        );
+        var dateData = []
+        while (dateStmt.step()) dateData.push(dateStmt.getAsObject());
+        const dateCtx = document.getElementById('date-chart');
+
+        new Chart(dateCtx, {
+            type: 'line',
+            data: {
+                labels: dateData.map(d => d.date),
+                datasets: [{
+                    label: '# of Attributions',
+                    data: dateData.map(d => d.count),
+                    borderWidth: 1,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Attributions by Date'
+                    }
+                },
+                indexAxis: 'x',
+                scales: {
+                    x: {
+                        ticks: {
+                            autoSkip: false
+                        }
+                    }
+                }
+            },
+        })
 
         return db
     })
