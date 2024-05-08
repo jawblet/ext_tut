@@ -3,10 +3,8 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../assets/styles.css">
+    <script src="../assets/chart.js"></script>
     <script src='../assets/sql.js'></script>
-    <script src="../assets/d3.js"></script>
-    <script src="../assets/plot.js"></script>
-    <script src="popup.js"></script>
 </head>
 
 <body>
@@ -21,8 +19,10 @@
             <h3 class="scalar_number" id="day_num"></h3>
         </div>
     </div>
-    <div id="source-plot"></div>
+    <canvas id="source-chart"></canvas>
+    <canvas id="date-chart"></canvas>
     <div class="footer"></div>
+    <script src="popup.js"></script>
 </body>
 
 </html>
