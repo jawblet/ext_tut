@@ -71,6 +71,7 @@ async function getLatestEvents(db) {
 }
 
 async function fetchDataAndInitSql() {
+
     const db_promise = fetch(file)
     .then((res) => res.arrayBuffer())
     .then(arrayBuffer => {
@@ -80,7 +81,6 @@ async function fetchDataAndInitSql() {
             const check = db.exec("SELECT name FROM sqlite_master WHERE type='table';");
             if(check.length > 0) {
                 tables = check[0].values
-                console.log(tables)
             } else {
                 throw new Error("No tables in the database:");
             }
@@ -96,7 +96,6 @@ async function fetchDataAndInitSql() {
         }
         await getLatestEvents(db)
         events = await GetEventsRecordedFromLocalStorage()
-        console.log(events)
         return db
     })
     .catch((e) => console.error(e));
@@ -122,7 +121,6 @@ async function getDate() {
         document.querySelector(".footer").innerText = full_string;
 }
 
-console.log("GET DATE")
 getDate();
 
 /**
@@ -138,7 +136,6 @@ async function getData() {
             const check = db.exec("SELECT name FROM sqlite_master WHERE type='table';");
             if(check.length > 0) {
                 tables = check[0].values
-                console.log(tables)
             } else {
                 throw new Error("No tables in the database:");
             }
@@ -168,7 +165,6 @@ async function getData() {
             return { ...item, source_origin };
           });
         data = modifiedData  
-        console.log(modifiedData)
         const ctx = document.getElementById('source-chart');
 
         new Chart(ctx, {
@@ -241,6 +237,34 @@ async function getData() {
 }
 
 getData()
+
+async function fetchBrowsingTopics() {
+    const topics = "file:///Users/juliabell/Library/Application%20Support/Google/Chrome/Default/BrowsingTopicsState"
+    const db_promise = fetch(topics)
+    .then((res) => res.json())
+    .then(text => {
+        if(text.epochs.length) {
+            latest_epoch = text.epochs[0]
+            latest_topics = latest_epoch.top_topics_and_observing_domains
+            
+            const list = document.getElementById("topics_data")
+
+            latest_topics.forEach(item => {
+                item_id = parseInt(item.topic)
+                item_string = taxonomy[item_id]
+                list_item = `<li>${item_string}</li>`
+                list.innerHTML += list_item
+                console.log(item.topic, item_string)
+        })
+        }
+        
+
+        return text
+    })
+    .catch((e) => console.error(e));
+}
+
+fetchBrowsingTopics()
 
 // USE FOR DEBUGGING
 function clearLocalStorage() {

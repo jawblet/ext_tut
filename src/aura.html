@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="../assets/styles.css">
     <script src="../assets/chart.js"></script>
     <script src='../assets/sql.js'></script>
+    <script src="../assets/taxonomy_v2.js"></script>
 </head>
 
 <body>
@@ -21,6 +22,12 @@
     </div>
     <canvas id="source-chart"></canvas>
     <canvas id="date-chart" style="padding-top:2rem"></canvas>
+    <div class="topics">
+        <h3 class="topics_caption"></h3>
+        <ul id="topics_data">
+
+        </ul>
+    </div>
     <div style="padding-top:3rem">
         <p>To see your full report, go to chrome://attribution-internals</p>
         <p style="padding-top:1rem;padding-bottom: 1rem;">To turn off ad attribution reporting, go to chrome://flags/#privacy-sandbox-ads-apis and select Disabled</p>
