@@ -58,16 +58,18 @@ async function getLatestEvents(db) {
     const full_string = "Total impressions monitored"
     const impressions = new_total.toString()
     document.getElementById("total_caption").innerText = full_string;
-    document.getElementById("total_num").innerText = impressions;
 
     // Send last day to extension
     const currentTimeUnix = Date.now()
-    const oneDayBeforeUnix = currentTimeUnix - 24 * 60 * 60 * 1000
-    day_total = db.exec(`SELECT COUNT(*) FROM sources WHERE source_time > ${oneDayBeforeUnix};`)[0].values[0][0]
+    var converted_time = (BigInt(currentTimeUnix) * BigInt(100) + BigInt(11644473600000000n))
+    console.log(converted_time)
+    day_total = db.exec(`SELECT COUNT(*) FROM sources WHERE source_time > ${converted_time};`)[0].values[0][0]
     const day_string = "Impressions in the last day"
     const day_impressions = day_total.toString()
-    document.getElementById("day_caption").innerText = day_string;
-    document.getElementById("day_num").innerText = day_impressions;
+    // document.getElementById("day_caption").innerText = day_string;
+    // document.getElementById("day_num").innerText = impressions;
+    document.getElementById("total_num").innerText = impressions;
+
 }
 
 async function fetchDataAndInitSql() {
@@ -117,7 +119,7 @@ function GetDateFromLocalStorage() {
 async function getDate() {
         var date;
         date = await GetDateFromLocalStorage();
-        const full_string = "Monitoring attribution data since " + date.toString();
+        const full_string = "Monitoring impression data since " + date.toString();
         document.querySelector(".footer").innerText = full_string;
 }
 
@@ -172,7 +174,7 @@ async function getData() {
             data: {
                 labels: data.map(d => d.source_origin),
                 datasets: [{
-                    label: '# of Attributions',
+                    label: '# of Impressions',
                     data: data.map(d => d.count),
                     borderWidth: 1
                 }]
@@ -181,7 +183,7 @@ async function getData() {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Source Origin Attributions by Frequency'
+                        text: 'Source Origin Impressions by Frequency'
                     }
                 },
                 indexAxis: 'y',
@@ -223,7 +225,7 @@ async function getData() {
             data: {
                 labels: reportingOriginData.map(d => d.reporting_origin),
                 datasets: [{
-                    label: '# of Attributions',
+                    label: '# of Impressions',
                     data: reportingOriginData.map(d => d.count),
                     borderWidth: 1
                 }]
@@ -232,7 +234,7 @@ async function getData() {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Reporting Origin Attributions by Frequency'
+                        text: 'Reporting Origin Impressions by Frequency'
                     }
                 },
                 indexAxis: 'y',
@@ -258,7 +260,7 @@ async function getData() {
             data: {
                 labels: dateData.map(d => d.date),
                 datasets: [{
-                    label: '# of Attributions',
+                    label: '# of Impressions',
                     data: dateData.map(d => d.count),
                     borderWidth: 1,
                     tension: 0.1
@@ -268,7 +270,7 @@ async function getData() {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Attributions by Date'
+                        text: 'Impressions by Date'
                     }
                 },
                 indexAxis: 'x',
