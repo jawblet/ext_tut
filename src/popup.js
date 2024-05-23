@@ -22,17 +22,22 @@ function GetEventsRecordedFromLocalStorage() {
  * IF NEW EVENTS HAVE BEEN RECORDED SINCE, ADD THEM
  */
 async function getLatestEvents(db) {
+    test = db.exec("SELECT * FROM sources;")
+    console.log(test)
     latest_row = db.exec("SELECT MAX(source_time) FROM sources;")
-    latest_time = latest_row[0].values[0][0]
+    console.log(latest_row)
+    latest_time = latest_row[0].values[0][0] // latest time browser recorded impression
+
     // COMPARE WHEN TABLE WAS UPDATED WITH LATEST STORED EVENT
-    last_update = await GetTimeUpdatedFromLocalStorage()       
-    latest_num = await GetEventsRecordedFromLocalStorage()
+    last_update = await GetTimeUpdatedFromLocalStorage()   // time of last update     
+    latest_num = await GetEventsRecordedFromLocalStorage() // current num event
+    console.log(latest_time, parseInt(last_update))
 
-    if(last_update == undefined || last_update < latest_time) {
-
+    if(last_update == undefined || parseInt(last_update) < latest_time) {
+        console.log("updating total")
         if(last_update == undefined) {              // assume if last update is undefined then no events are recorded 
             num_events = db.exec("SELECT COUNT(*) FROM sources;")[0].values[0][0]
-            // console.log(num_events)
+            console.log("reset count", num_events)
             chrome.storage.local.set({ "recorded": num_events }).then(() => {
                 console.log("Total events monitored", num_events);
             });
@@ -59,17 +64,23 @@ async function getLatestEvents(db) {
     const impressions = new_total.toString()
     document.getElementById("total_caption").innerText = full_string;
 
-    // Send last day to extension
-    const currentTimeUnix = Date.now()
-    var converted_time = (BigInt(currentTimeUnix) * BigInt(100) + BigInt(11644473600000000n))
-    console.log(converted_time)
-    day_total = db.exec(`SELECT COUNT(*) FROM sources WHERE source_time > ${converted_time};`)[0].values[0][0]
+    var currentDate = Date.now(); // current time in UNIX (ms)
+    var oneDayBeforeCurrentDate = currentDate - 24 * 60 * 60 * 1000;
+    var milliSince = 11644473600000
+    var convertedCurrent = (oneDayBeforeCurrentDate + milliSince) * 1000
+    console.log(latest_time, convertedCurrent)
+
+    // var test = (latest_time - convertedCurrent) / (1000000 * 60 * 60)
+    // console.log(test)
+
+    day_total = db.exec(`SELECT COUNT(*) FROM sources WHERE source_time > ${convertedCurrent};`)[0].values[0][0]
+    console.log(day_total)
+
     const day_string = "Impressions in the last day"
     const day_impressions = day_total.toString()
-    // document.getElementById("day_caption").innerText = day_string;
-    // document.getElementById("day_num").innerText = impressions;
+    document.getElementById("day_caption").innerText = day_string;
+    document.getElementById("day_num").innerText = day_impressions;
     document.getElementById("total_num").innerText = impressions;
-
 }
 
 async function fetchDataAndInitSql() {
@@ -125,9 +136,6 @@ async function getDate() {
 
 getDate();
 
-/**
- * data visualization
- */
 async function getData() {
     const db_promise = fetch(file)
     .then((res) => res.arrayBuffer())
@@ -296,7 +304,6 @@ async function fetchBrowsingTopics() {
     const db_promise = fetch(topics)
     .then((res) => res.json())
     .then(text => {
-        console.log(text)
         if(text.epochs.length) {
             latest_epoch = text.epochs[0]
             latest_topics = latest_epoch.top_topics_and_observing_domains
@@ -314,7 +321,7 @@ async function fetchBrowsingTopics() {
                 item_string = taxonomy[item_id]
                 list_item = `<li>${item_string}</li>`
                 list.innerHTML += list_item
-                console.log(item.topic, item_string)
+                // console.log(item.topic, item_string)
         })
         }
         
